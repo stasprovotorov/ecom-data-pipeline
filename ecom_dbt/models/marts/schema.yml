@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: mart_user_metrics
+    description: "Mart with order and revenue metrics for each user"
+    columns:
+      - name: user_id
+        description: "Unique identifier of the user"
+        tests:
+          - not_null
+          - unique
+
+      - name: name
+        description: "Name of the user"
+
+      - name: email
+        description: "Email address of the user"
+
+      - name: city
+        description: "City of the user"
+
+      - name: signup_date
+        description: "Date when the user signed up"
+
+      - name: order_count
+        description: "Total number of orders placed by the user"
+
+      - name: total_amount
+        description: "Total order amount for the user"
+
+      - name: avg_amount
+        description: "Average order amount for the user"
+
+      - name: first_order
+        description: "Date of the user's first order"
+
+      - name: last_order
+        description: "Date of the user's last order"
+
+  - name: mart_product_sales
+    description: "Mart with product-level sales metrics"
+    columns:
+      - name: product_id
+        description: "Unique identifier of the product"
+        tests:
+          - not_null
+          - unique
+
+      - name: product_name
+        description: "Name of the product"
+
+      - name: category
+        description: "Category of the product"
+
+      - name: brand
+        description: "Brand of the product"
+
+      - name: order_item_count
+        description: "Total number of order items for the product"
+
+      - name: sold_count
+        description: "Total quantity sold for the product"
+
+      - name: total_amount
+        description: "Total sales amount for the product"
+
+      - name: avg_item_price
+        description: "Average item price for the product"
+
+  - name: mart_daily_sales
+    description: "Daily sales mart with order, buyer, revenue, and item metrics"
+    columns:
+      - name: order_date
+        description: "Date of the orders"
+        tests:
+          - not_null
+          - unique
+
+      - name: orders_count
+        description: "Total number of orders placed on that date"
+
+      - name: buyers_count
+        description: "Number of unique buyers who placed orders on that date"
+
+      - name: total_amount
+        description: "Total sales amount for that date"
+
+      - name: items_sold
+        description: "Total quantity of items sold on that date"
