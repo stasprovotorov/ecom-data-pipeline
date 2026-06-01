@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS raw_orders (
 
 CREATE TABLE IF NOT EXISTS raw_order_items (
     order_item_id TEXT PRIMARY KEY,
-    order_id TEXT NOT NULL REFERENCES raw_products(product_id),
-    product_id TEXT NOT NULL REFERENCES raw_orders(order_id),
+    order_id TEXT NOT NULL REFERENCES raw_orders(order_id),
+    product_id TEXT NOT NULL REFERENCES raw_products(product_id),
     user_id TEXT NOT NULL REFERENCES raw_users(user_id),
     quantity INTEGER,
     item_price NUMERIC(10, 2),
