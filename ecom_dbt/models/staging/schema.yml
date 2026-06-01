@@ -15,27 +15,24 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('stg_orders')
-                field: order_id
+              to: ref('stg_orders')
+              field: order_id
 
       - name: product_id
         description: "Identifier of the product"
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('stg_products')
-                field: product_id
+              to: ref('stg_products')
+              field: product_id
 
       - name: user_id
         description: "Identifier of the user"
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('stg_users')
-                field: user_id
+              to: ref('stg_users')
+              field: user_id
 
       - name: quantity
         description: "Quantity of items in the order item"
@@ -72,9 +69,8 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('stg_users')
-                field: user_id
+              to: ref('stg_users')
+              field: user_id
 
       - name: order_date
         description: "Date and time when the order was created"
