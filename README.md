@@ -125,3 +125,4 @@ This helps keep dependencies isolated and avoids package conflicts.
 - dbt docs
 - data quality checks
 - investigate compatibility of ETL and dbt dependencies to use a single environment
+- refactor and optimize ETL code
