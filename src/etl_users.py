@@ -3,7 +3,7 @@ from sqlalchemy import text
 from src import sql
 from src.config import settings
 from src.database import get_engine
-from src.utils import normalize_string, get_source_filename, get_timestamp, extract_data_from_csv
+from src.utils import normalize_string, get_source_filename, get_timestamp
 
 EXPECTED_COLUMNS = {
     'user_id',
@@ -84,7 +84,7 @@ def load_users(df: pd.DataFrame) -> None:
 def main() -> None:
     source_filename = get_source_filename(settings.CSV_USERS)
 
-    df_source = extract_data_from_csv(settings.CSV_USERS)
+    df_source = extract_users(settings.CSV_USERS)
     df_transformed = transform_users(df_source, source_filename)
     load_users(df_transformed)
 
