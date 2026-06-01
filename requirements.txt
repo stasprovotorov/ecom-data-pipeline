@@ -1,6 +1,0 @@
-pandas
-SQLAlchemy
-psycopg2-binary
-pydantic-settings
-dbt-postgres==1.10.0
-
