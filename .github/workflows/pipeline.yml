@@ -1,0 +1,125 @@
+name: E-commerce Data Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: ecom
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: kick
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d ecom"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_NAME: ecom
+      DB_USER: postgres
+      DB_PASSWORD: kick
+      DB_URL: postgresql+psycopg2://postgres:kick@localhost:5432/ecom
+
+      CSV_USERS: data/users.csv
+      CSV_PRODUCTS: data/products.csv
+      CSV_ORDERS: data/orders.csv
+      CSV_ORDER_ITEMS: data/order_items.csv
+
+      PGPASSWORD: kick
+      DBT_PROFILES_DIR: ./ecom_dbt
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME"; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
+
+      - name: Initialize database schema
+        run: |
+          psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -f sql/init_schema.sql
+
+      - name: Create ETL virtual environment
+        run: |
+          python -m venv .venv_etl
+          . .venv_etl/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements-etl.txt
+
+      - name: Run ETL
+        run: |
+          . .venv_etl/bin/activate
+          python -m src.etl_users
+          python -m src.etl_products
+          python -m src.etl_orders
+          python -m src.etl_order_items
+
+      - name: Create dbt virtual environment
+        run: |
+          python -m venv .venv_dbt
+          . .venv_dbt/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements-dbt.txt
+
+      - name: Create dbt profiles.yml
+        run: |
+          cat <<'EOF' > ecom_dbt/profiles.yml
+          ecom_dbt:
+            target: dev
+            outputs:
+              dev:
+                type: postgres
+                host: localhost
+                port: 5432
+                user: postgres
+                password: kick
+                dbname: ecom
+                schema: public
+                threads: 1
+          EOF
+
+      - name: Debug dbt connection
+        run: |
+          . .venv_dbt/bin/activate
+          cd ecom_dbt
+          dbt debug
+
+      - name: Run dbt models
+        run: |
+          . .venv_dbt/bin/activate
+          cd ecom_dbt
+          dbt run
+
+      - name: Run dbt tests
+        run: |
+          . .venv_dbt/bin/activate
+          cd ecom_dbt
+          dbt test
