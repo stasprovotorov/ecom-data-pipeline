@@ -89,37 +89,17 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements-dbt.txt
 
-      - name: Create dbt profiles.yml
-        run: |
-          cat <<'EOF' > ecom_dbt/profiles.yml
-          ecom_dbt:
-            target: dev
-            outputs:
-              dev:
-                type: postgres
-                host: localhost
-                port: 5432
-                user: postgres
-                password: kick
-                dbname: ecom
-                schema: public
-                threads: 1
-          EOF
-
       - name: Debug dbt connection
         run: |
           . .venv_dbt/bin/activate
-          cd ecom_dbt
-          dbt debug
+          dbt debug --project-dir ecom_dbt
 
       - name: Run dbt models
         run: |
           . .venv_dbt/bin/activate
-          cd ecom_dbt
-          dbt run
+          dbt run --project-dir ecom_dbt
 
       - name: Run dbt tests
         run: |
           . .venv_dbt/bin/activate
-          cd ecom_dbt
-          dbt test
+          dbt test --project-dir ecom_dbt
