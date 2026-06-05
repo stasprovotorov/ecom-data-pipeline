@@ -6,12 +6,13 @@ charset-normalizer==3.4.7
 click==8.4.1
 colorama==0.4.6
 daff==1.4.2
-dbt-common==1.27.1
-dbt-core==1.10.0
+dbt-adapters==1.19.0
+dbt-common==1.37.3
+dbt-core==1.11.11
 dbt-extractor==0.6.0
 dbt-postgres==1.10.0
 dbt-protos==1.0.514
-dbt-semantic-interfaces==0.8.5
+dbt-semantic-interfaces==0.9.0
 deepdiff==7.0.1
 idna==3.17
 importlib_metadata==8.9.0
@@ -30,7 +31,7 @@ orderly-set==5.5.0
 packaging==26.2
 parsedatetime==2.6
 pathspec==0.12.1
-protobuf==5.29.6
+protobuf==6.30.0
 psycopg2-binary==2.9.12
 pydantic==1.10.26
 python-dateutil==2.9.0.post0

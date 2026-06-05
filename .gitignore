@@ -1,4 +1,5 @@
-.venv/
+.venv_etl/
+.venv_dbt/
 .env
 __pycache__/
 ecom_dbt/logs/
