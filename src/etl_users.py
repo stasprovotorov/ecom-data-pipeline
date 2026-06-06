@@ -3,9 +3,12 @@ from sqlalchemy import text
 from src import sql
 from src.config import settings
 from src.database import get_engine
-from src.utils import normalize_string, get_source_filename, get_timestamp
+from src.utils import normalize_string, get_source_filename, get_timestamp, extract_data_from_csv
+from src.logging_config import logging
 
-EXPECTED_COLUMNS = {
+logger = logging.getLogger(__name__)
+
+REQUIRED_COLUMNS = {
     'user_id',
     'name',
     'email',
@@ -13,19 +16,6 @@ EXPECTED_COLUMNS = {
     'city',
     'signup_date',
 }
-
-
-def extract_users(filepath: str) -> pd.DataFrame:
-    df_source = pd.read_csv(filepath)
-
-    retrieved_columns = set(df_source.columns)
-    missing_columns = EXPECTED_COLUMNS - retrieved_columns
-
-    if missing_columns:
-        raise ValueError(f"Missing expected columns: {missing_columns}")
-
-    return df_source
-
 
 def transform_users(df_source: pd.DataFrame, source_filename: str) -> pd.DataFrame:
     df_transformed = df_source.copy()
@@ -84,7 +74,12 @@ def load_users(df: pd.DataFrame) -> None:
 def main() -> None:
     source_filename = get_source_filename(settings.CSV_USERS)
 
-    df_source = extract_users(settings.CSV_USERS)
+    df_source = extract_data_from_csv(
+        filepath=settings.CSV_USERS, 
+        required_columns=REQUIRED_COLUMNS, 
+        logger=logger,
+    )
+
     df_transformed = transform_users(df_source, source_filename)
     load_users(df_transformed)
 
