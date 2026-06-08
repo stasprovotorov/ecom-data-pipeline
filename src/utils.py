@@ -20,7 +20,7 @@ def normalize_string(value: str) -> str | None:
         return value
 
     value = value.strip()
-    
+
     if not value:
         return None    
     return value
@@ -61,3 +61,8 @@ def extract_data_from_csv(filepath: str, required_columns: set, logger: Logger, 
 def is_valid_email(email: str) -> bool:
     email_regex = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
     return bool(email_regex.match(email))
+
+
+def is_valid_user_id(user_id: str) -> bool:
+    user_id_regex = re.compile(r'^U\d{6}$')
+    return bool(user_id_regex.match(user_id))
