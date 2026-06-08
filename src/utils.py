@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime
 import pandas as pd
 from logging import Logger
@@ -56,3 +57,8 @@ def extract_data_from_csv(filepath: str, required_columns: set, logger: Logger, 
         logger.warning("Source file's and extracted dataframe's row counts not equals. File: %s, dataframe: %s", file_row_count, df_row_count)
 
     return df_source
+
+
+def is_valid_email(email: str) -> bool:
+    email_regex = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+    return bool(email_regex.match(email))
