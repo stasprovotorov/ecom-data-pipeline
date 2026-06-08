@@ -15,15 +15,14 @@ def get_timestamp() -> datetime:
 
 def normalize_string(value: str) -> str | None:
     if not isinstance(value, str):
+        if pd.isna(value):
+            return None
         return value
 
-    if pd.isna(value):
-        return None
-    
     value = value.strip()
-    if not value:
-        return None
     
+    if not value:
+        return None    
     return value
 
 
